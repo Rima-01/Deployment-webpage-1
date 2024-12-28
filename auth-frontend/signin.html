@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Webpage - Login & Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #343a40;
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #004d7a, #008793);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #005073;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        .header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #d0eaff;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #005073;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: #004d7a;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #005073;
+        }
+        .error-message, .success-message {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .error-message {
+            color: red;
+        }
+        .success-message {
+            color: green;
+        }
+        .switch {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .switch a {
+            color: #004d7a;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .switch a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #004d7a;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Welcome to the Dundee Research and Educational Authority</h1>
+        <p>Empowering Minds, Transforming Futures</p>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signup" class="container">
+        <h2>Sign Up</h2>
+        <div class="error-message" id="signup-error"></div>
+        <div class="success-message" id="signup-success"></div>
+        <div class="form-group">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" required>
+        </div>
+        <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required>
+        </div>
+        <button class="btn" id="signup-btn">Sign Up</button>
+        <div class="switch">
+            Already have an account? <a href="#" id="switch-to-login">Log In</a>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login" class="container" style="display: none;">
+        <h2>Log In</h2>
+        <div class="error-message" id="login-error"></div>
+        <div class="success-message" id="login-success"></div>
+        <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" required>
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required>
+        </div>
+        <button class="btn" id="login-btn">Log In</button>
+        <div class="switch">
+            Don't have an account? <a href="#" id="switch-to-signup">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Dundee Research and Educational Authority. All Rights Reserved.
+    </footer>
+
+    <script>
+        // API Endpoints
+        const API_BASE_URL = "http://54.157.4.173:8000/api";
+
+        // Toggle between signup and login forms
+        document.getElementById('switch-to-login').addEventListener('click', () => {
+            document.getElementById('signup').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+        });
+
+        document.getElementById('switch-to-signup').addEventListener('click', () => {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('signup').style.display = 'block';
+        });
+
+        // Handle API Errors
+        const handleError = (error, errorElement) => {
+            console.error("Error:", error);
+            errorElement.innerText = "Failed to connect to the server. Please try again.";
+        };
+
+        // Sign Up
+        document.getElementById('signup-btn').addEventListener('click', async () => {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const signupError = document.getElementById('signup-error');
+            const signupSuccess = document.getElementById('signup-success');
+
+            signupError.innerText = '';
+            signupSuccess.innerText = '';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/signup/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    signupSuccess.innerText = data.message;
+                } else {
+                    signupError.innerText = data.error || 'Signup failed.';
+                }
+            } catch (error) {
+                handleError(error, signupError);
+            }
+        });
+
+        // Log In
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const loginError = document.getElementById('login-error');
+            const loginSuccess = document.getElementById('login-success');
+
+            loginError.innerText = '';
+            loginSuccess.innerText = '';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    loginSuccess.innerText = data.message;
+                } else {
+                    loginError.innerText = data.error || 'Login failed.';
+                }
+            } catch (error) {
+                handleError(error, loginError);
+            }
+        });
+    </script>
+</body>
+</html>
