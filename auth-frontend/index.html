@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Educational Webpage</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #343a40;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #004d7a, #008793);
+            color: white;
+            padding: 30px 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1em;
+            margin-top: 5px;
+            color: #d0eaff;
+        }
+
+        /* Container Section */
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .container h2 {
+            color: #004d7a;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .container p {
+            font-size: 1em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* Feature Cards */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            width: 180px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.03);
+        }
+
+        .feature-card h3 {
+            font-size: 1em;
+            color: #005073;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 0.8em;
+            color: #555;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            margin: 15px 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #004d7a;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #005073;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #004d7a;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Welcome to the Educational Webpage</h1>
+        <p>Empowering Minds, Transforming Futures</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2>Explore Our Platform</h2>
+        <p>
+            Join our community to access engaging educational content, interactive tools, and insightful resources 
+            that empower learning at every level.
+        </p>
+
+        <!-- Feature Cards -->
+        <div class="features">
+            <div class="feature-card">
+                <h3>Quality Courses</h3>
+                <p>Access high-quality courses tailored to meet your educational needs.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Interactive Tools</h3>
+                <p>Enhance your learning experience with state-of-the-art tools.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Supportive Community</h3>
+                <p>Learn, share, and grow with like-minded individuals worldwide.</p>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div>
+            <a href="login.html" class="btn">Log In</a>
+            <a href="signin.html" class="btn">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Educational Webpage. All Rights Reserved.
+    </footer>
+</body>
+</html>
