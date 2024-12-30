@@ -1,5 +1,5 @@
 """
-ASGI config for auth_microservice project.
+ASGI config for video_microservice project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'auth_microservice.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video_microservice.settings')
 
 application = get_asgi_application()
