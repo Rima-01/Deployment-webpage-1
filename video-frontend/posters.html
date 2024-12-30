@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Videos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to the Educational Video Library</h1>
+    <p style="text-align: center; color: #555;">Click on a poster to start learning.</p>
+    <div id="video-grid" class="video-grid">
+        <!-- Dynamic Video Posters Will Be Injected Here -->
+    </div>
+    <div id="video-player" class="hidden">
+        <video id="video" controls></video>
+        <button onclick="closePlayer()">Close</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
