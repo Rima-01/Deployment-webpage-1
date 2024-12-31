@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from django.conf import settings
 
 AWS_REGION = 'us-east-1'
-S3_BUCKET = 'webpage-uploads-1'
+S3_BUCKET = 'webpage-uploads-2'
 
 # Render posters page
 def posters_page(request):

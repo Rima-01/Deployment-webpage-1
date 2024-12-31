@@ -97,7 +97,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS Configuration
-AWS_STORAGE_BUCKET_NAME = 'webpage-uploads-1'
+AWS_STORAGE_BUCKET_NAME = 'webpage-uploads-2'
 AWS_S3_REGION_NAME = 'us-east-1'
 
 # boto3 S3 client for fetching posters and videos
