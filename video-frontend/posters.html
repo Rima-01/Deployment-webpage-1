@@ -3,19 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educational Videos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Educational Video Library</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #007bff;
+            color: #fff;
+            margin: 0;
+        }
+        p {
+            text-align: center;
+            color: #555;
+            margin: 10px 0;
+        }
+        .video-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+        .video-poster {
+            width: 200px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .video-poster:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to the Educational Video Library</h1>
-    <p style="text-align: center; color: #555;">Click on a poster to start learning.</p>
+    <p>Click on a poster to start learning.</p>
     <div id="video-grid" class="video-grid">
-        <!-- Dynamic Video Posters Will Be Injected Here -->
-    </div>
-    <div id="video-player" class="hidden">
-        <p id="description" style="color: white; text-align: center;"></p>
-        <video id="video" controls></video>
-        <button onclick="closePlayer()">Close</button>
+        <!-- Posters will be dynamically injected here -->
     </div>
     <script src="scripts/app1.js"></script>
 </body>

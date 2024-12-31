@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #007bff;
+            color: #fff;
+            margin: 0;
+        }
+        #description {
+            text-align: center;
+            margin: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="video-title"></h1>
+    <p id="description"></p>
+    <div id="video-player" class="video-container">
+        <video id="video" controls></video>
+    </div>
+    <button onclick="goBack()">Back to Library</button>
+    <script src="scripts/app1.js"></script>
+</body>
+</html>

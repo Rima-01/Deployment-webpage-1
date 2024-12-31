@@ -1,64 +1,81 @@
-const videoGrid = document.getElementById('video-grid');
-const videoPlayer = document.getElementById('video-player');
-const video = document.getElementById('video');
-const description = document.getElementById('description'); // Element to display video description
+document.addEventListener("DOMContentLoaded", () => {
+    const videoGrid = document.getElementById('video-grid'); // Posters grid
+    const videoPlayer = document.getElementById('video');   // Video player
 
-// API base URL for the video streaming backend
-const VIDEO_API_BASE_URL = "http://44.212.18.20:8001"; // Update the port if needed
+    if (videoGrid) {
+        // Posters page logic
+        fetchPosters();
+    } else if (videoPlayer) {
+        // Video player page logic
+        fetchAndPlayVideo();
+    }
+});
 
-// Fetch video data from the backend API
-async function fetchVideos() {
+// Fetch and display posters
+async function fetchPosters() {
+    const API_URL = "http://44.212.18.20:8001/videos/"; // Replace with backend API URL
+    const videoGrid = document.getElementById('video-grid');
+
     try {
-        const response = await fetch(`${VIDEO_API_BASE_URL}/videos/`);
-        if (!response.ok) {
-            throw new Error(`Error fetching videos: ${response.statusText}`);
-        }
+        const response = await fetch(API_URL);
         const data = await response.json();
+
         if (data.success) {
-            displayVideos(data.videos);
+            data.videos.forEach(video => {
+                const img = document.createElement('img');
+                img.src = video.poster_url; // Pre-signed poster URL
+                img.alt = video.title;
+                img.title = video.title; // Tooltip
+                img.className = 'video-poster';
+                img.onclick = () => navigateToVideoPage(video.video_id, video.title, video.description);
+                videoGrid.appendChild(img);
+            });
         } else {
-            console.error('Failed to fetch videos:', data.error);
+            console.error('Failed to fetch posters:', data.error);
         }
     } catch (error) {
-        console.error('Failed to fetch videos:', error);
+        console.error('Error fetching posters:', error);
     }
 }
 
-// Display video posters dynamically
-function displayVideos(videos) {
-    videos.forEach(video => {
-        const img = document.createElement('img');
-        img.src = video.poster_url; // Use the pre-signed poster URL
-        img.alt = video.title;
-        img.title = video.title; // Adds a tooltip with the video title
-        img.className = 'video-poster';
-        img.onclick = () => playVideo(video.video_id, video.description); // Pass video_id and description
-        videoGrid.appendChild(img);
-    });
+// Navigate to video page
+function navigateToVideoPage(videoId, title, description) {
+    const videoPageUrl = `/video.html?video_id=${videoId}&title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
+    window.location.href = videoPageUrl;
 }
 
-// Play the selected video in the video player
-async function playVideo(videoId, videoDescription) {
+// Fetch video details and play video
+async function fetchAndPlayVideo() {
+    const video = document.getElementById('video');
+    const videoTitle = document.getElementById('video-title');
+    const descriptionElement = document.getElementById('description');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('video_id');
+    const title = urlParams.get('title');
+    const description = urlParams.get('description');
+
+    // Set the title and description
+    videoTitle.textContent = title;
+    descriptionElement.textContent = description;
+
+    const API_URL = `http://44.212.18.20:8001/videos/video/${videoId}/`;
+
     try {
-        const response = await fetch(`${VIDEO_API_BASE_URL}/videos/video/${videoId}/`, { method: 'POST' });
+        const response = await fetch(API_URL, { method: 'POST' });
         const data = await response.json();
+
         if (data.success) {
-            video.src = data.video_url; // Use the pre-signed video URL
-            description.textContent = videoDescription || "No description available."; // Show description
-            videoPlayer.classList.remove('hidden');
+            video.src = data.video_url; // Pre-signed video URL
         } else {
-            console.error('Error fetching video:', data.error);
+            console.error('Failed to fetch video:', data.error);
         }
     } catch (error) {
-        console.error('Failed to play video:', error);
+        console.error('Error fetching video:', error);
     }
 }
 
-// Close the video player
-function closePlayer() {
-    videoPlayer.classList.add('hidden');
-    video.pause();
+// Navigate back to posters page
+function goBack() {
+    window.location.href = "/posters.html";
 }
-
-// Fetch and display videos on page load
-fetchVideos();
