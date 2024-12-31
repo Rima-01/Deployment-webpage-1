@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+import boto3
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bu6w04o$)&ox7bt-$ngp)i2c+ts-kksov_#wl(lowbzc4l3qat'
+SECRET_KEY = 'django-insecure-5&#5dnwqv3sixvclyrl@uw%5335tzg2mp&)sglldo-p4@0-^+j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost',
+    '0.0.0.0',
+    '127.0.0.1',
+    '44.212.18.20',
+    ]
 
 
 # Application definition
@@ -37,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'django_extensions',
+    'videos',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +58,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'video_microservice.urls'
+
 
 TEMPLATES = [
     {
@@ -75,8 +84,9 @@ WSGI_APPLICATION = 'video_microservice.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.dummy',
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -117,7 +127,51 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [BASE_DIR / 'video-frontend' / 'static']
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#AWS_ACCESS_KEY_ID = 'your_aws_access_key_id'
+#AWS_SECRET_ACCESS_KEY = 'your_aws_secret_access_key'
+AWS_STORAGE_BUCKET_NAME = 'webpage-uploads-1'
+AWS_S3_REGION_NAME = 'us-east-1'
+
+# boto3 S3 client for fetching posters and videos
+s3 = boto3.client(
+    's3',
+#    aws_access_key_id=AWS_ACCESS_KEY_ID,
+#    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_S3_REGION_NAME
+)
+
+# boto3 DynamoDB resource for tracking video metadata
+dynamodb = boto3.resource(
+    'dynamodb',
+#    aws_access_key_id=AWS_ACCESS_KEY_ID,
+#    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_S3_REGION_NAME
+)
+
+CORS_ALLOWED_ORIGINS = [
+    "http://44.212.18.20:5000",
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "http://localhost:5000",
+    "http://44.212.18.20:8001"
+]
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
