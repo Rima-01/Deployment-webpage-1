@@ -3,17 +3,19 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import boto3
 from botocore.exceptions import ClientError
+from django.conf import settings
 
 AWS_REGION = 'us-east-1'
 S3_BUCKET = 'webpage-uploads-1'
 
 # Render posters page
 def posters_page(request):
+    print("Template search paths:", settings.TEMPLATES[0]['DIRS']) 
     return render(request, 'posters.html')
 
 # Render video page
 def video_page(request):
-    return render(request, 'video.html')
+    return render(request, 'play_video.html')
 
 # Fetch videos and generate pre-signed URLs
 def get_videos(request):

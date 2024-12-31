@@ -12,11 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 DEBUG = True
+#DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '44.212.18.20']
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '44.212.0.83']
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5&#5dnwqv3sixvclyrl@uw%5335tzg2mp&)sglldo-p4@0-^+j'
+#SECRET_KEY = 'django-insecure-5&#5dnwqv3sixvclyrl@uw%5335tzg2mp&)sglldo-p4@0-^+j'
 
 
 # Application definition
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'video_microservice.urls'
@@ -49,7 +51,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'video-frontend',  # Include video-frontend for serving HTML files
+#            BASE_DIR / 'video-frontend',  # Include video-frontend for serving HTML files
+#            os.path.join(BASE_DIR, 'video-frontend')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -88,7 +91,7 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'video-frontend' / 'static']
+#STATICFILES_DIRS = [BASE_DIR / 'video-frontend' / 'static']
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -111,11 +114,11 @@ dynamodb = boto3.resource(
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://44.212.18.20:5000",
+    "http://44.212.0.83:5000",
     "http://localhost:8001",
     "http://127.0.0.1:8001",
     "http://localhost:5000",
-    "http://44.212.18.20:8001"
+    "http://44.212.0.83:8001"
 ]
 
 # Logging configuration
