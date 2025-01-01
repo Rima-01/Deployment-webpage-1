@@ -35,8 +35,8 @@ def get_videos(request):
         items = response['Items']
         for item in items:
             # Generate pre-signed poster URL
-            if 'poster_url' in item and f"{S3_BUCKET}/" in item['poster_url']:
-                poster_key = item['poster_url'].split(f"{S3_BUCKET}/")[1]
+            if 'poster_url' in item and "amazonaws.com/" in item['poster_url']:
+                poster_key = item['poster_url'].split("amazonaws.com/")[1]
                 item['poster_url'] = s3.generate_presigned_url(
                     'get_object',
                     Params={'Bucket': S3_BUCKET, 'Key': poster_key},
@@ -114,11 +114,12 @@ def get_video_url(request, video_id):
         video = response.get('Item', {})
 
         if not video:
+            logger.error(f"Video not found for video_id: {video_id}")
             return JsonResponse({'success': False, 'error': 'Video not found'}, status=404)
 
         # Generate pre-signed video URL
-        if 'video_url' in video and f"{S3_BUCKET}/" in video['video_url']:
-            video_key = video['video_url'].split(f"{S3_BUCKET}/")[1]
+        if 'video_url' in video and "amazonaws.com/" in video['video_url']:
+            video_key = video['video_url'].split("amazonaws.com/")[1]
             video_url = s3.generate_presigned_url(
                 'get_object',
                 Params={'Bucket': S3_BUCKET, 'Key': video_key},
