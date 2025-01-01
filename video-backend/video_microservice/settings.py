@@ -14,10 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 #DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '44.212.0.83']
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '52.207.108.185']
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-5&#5dnwqv3sixvclyrl@uw%5335tzg2mp&)sglldo-p4@0-^+j'
 
 
 # Application definition
@@ -47,6 +46,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'video_microservice.urls'
 
 # Updated template configuration to include 'video-frontend' for direct HTML serving
+SECRET_KEY = 'django-insecure-6q_2a=en*6xk7)a@k&ujc2t42@-wqa#(yck$rqj-*lqcc^f-)b'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -114,12 +115,13 @@ dynamodb = boto3.resource(
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://44.212.0.83:5000",
+    "http://52.207.108.185:5000",
     "http://localhost:8001",
     "http://127.0.0.1:8001",
     "http://localhost:5000",
-    "http://44.212.0.83:8001"
+    "http://52.207.108.185:8001"
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Logging configuration
 LOGGING = {

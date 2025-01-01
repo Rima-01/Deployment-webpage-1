@@ -8,14 +8,9 @@
 from rest_framework import serializers
 
 class VideoSerializer(serializers.Serializer):
-    video_id = serializers.CharField(max_length=255)
-    title = serializers.CharField(max_length=255)
-    poster_url = serializers.URLField()
-    video_url = serializers.URLField()
-    click_count = serializers.IntegerField()
-
-    # Optional: Add custom validation logic if needed
-    def validate_click_count(self, value):
-        if value < 0:
-            raise serializers.ValidationError("Click count cannot be negative.")
-        return value
+    video_id = serializers.CharField(max_length=255)  # Video ID (Primary Key)
+    title = serializers.CharField(max_length=255)  # Title of the video
+    description = serializers.CharField(max_length=500, allow_blank=True)  # Description (optional)
+    poster_url = serializers.URLField()  # URL for the video poster
+    video_url = serializers.URLField()  # URL for the video
+    click_count = serializers.IntegerField(default=0) 

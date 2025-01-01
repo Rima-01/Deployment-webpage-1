@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fetch and display posters
 async function fetchPosters() {
-    const API_URL = "http://44.212.0.83:8001/videos/get_videos/"; // Replace with your backend API URL
+    const API_URL = "http://52.207.108.185:8001/videos/get_videos/"; // Replace with your backend API URL
     const videoGrid = document.getElementById("video-grid");
 
     try {
@@ -65,7 +65,7 @@ async function fetchAndPlayVideo() {
     videoTitle.textContent = title || "Untitled Video";
     descriptionElement.textContent = description || "No description available.";
 
-    const API_URL = `http://44.212.0.83:8001/videos/play_video/${videoId}/`;
+    const API_URL = `http://52.207.108.185:8001/videos/play_video/${videoId}/`;
 
     try {
         const response = await fetch(API_URL, { method: "POST" });
