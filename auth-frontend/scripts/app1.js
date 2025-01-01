@@ -28,8 +28,7 @@ async function fetchPosters() {
                 img.alt = video.title;
                 img.title = video.title; // Tooltip for the poster
                 img.className = "video-poster";
-                img.onclick = () =>
-                    navigateToVideoPage(video.video_id, video.title, video.description);
+                img.onclick = () => navigateToVideoPage(video.video_id, video.title, video.description);
                 videoGrid.appendChild(img);
             });
         } else {
@@ -83,11 +82,6 @@ async function fetchAndPlayVideo() {
         videoTitle.textContent = "Error Loading Video";
         descriptionElement.textContent = "An error occurred while loading the video.";
     }
-}
-
-// Navigate back to posters page
-function goBack() {
-    window.location.href = "/posters.html";
 }
 
 // Display an error message in the posters grid
