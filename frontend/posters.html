@@ -12,18 +12,24 @@
             background-color: #f8f9fa;
             color: #333;
         }
+
         h1 {
             text-align: center;
             padding: 20px 0;
             background-color: #007bff;
             color: #fff;
             margin: 0;
+            font-size: 2em;
+            font-weight: bold;
         }
+
         p {
             text-align: center;
             color: #555;
             margin: 10px 0;
+            font-size: 1.2em;
         }
+
         .video-grid {
             display: flex;
             flex-wrap: wrap;
@@ -31,15 +37,43 @@
             justify-content: center;
             padding: 20px;
         }
+
+        .video-container {
+            text-align: center;
+            width: 220px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 10px;
+        }
+
+        .video-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+        }
+
         .video-poster {
             width: 200px;
+            height: 300px; /* Fixed height to ensure equal size */
+            object-fit: cover; /* Maintain aspect ratio */
             border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .video-poster:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+        .video-title {
+            margin: 10px 0 0;
+            font-size: 1em;
+            font-weight: bold;
+            color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #007bff;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 1em;
         }
     </style>
 </head>
@@ -49,6 +83,9 @@
     <div id="video-grid" class="video-grid">
         <!-- Posters will be dynamically injected here -->
     </div>
+    <footer>
+        &copy; 2025 Educational Video Library. All Rights Reserved.
+    </footer>
     <script src="scripts/app1.js"></script>
 </body>
 </html>

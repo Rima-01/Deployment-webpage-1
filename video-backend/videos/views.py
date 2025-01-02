@@ -33,6 +33,9 @@ def get_videos(request):
             return JsonResponse({'success': False, 'error': 'No videos found.'}, status=404)
 
         items = response['Items']
+        # Ensure items are sorted by video_id in ascending order
+        items.sort(key=lambda x: int(x.get('video_id', 0)))
+
         for item in items:
             # Generate pre-signed poster URL
             if 'poster_url' in item and "amazonaws.com/" in item['poster_url']:

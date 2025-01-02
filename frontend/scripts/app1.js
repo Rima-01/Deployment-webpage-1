@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fetch and display posters
 async function fetchPosters() {
-    const API_URL = "http://52.207.108.185:8001/videos/get_videos/"; // Replace with your backend API URL
+    const API_URL = "http://18.232.250.31:8001/videos/get_videos/"; // Replace with your backend API URL
     const videoGrid = document.getElementById("video-grid");
 
     try {
@@ -21,15 +21,35 @@ async function fetchPosters() {
         const data = await response.json();
 
         if (data.success) {
-            // Loop through the video list and create poster elements
-            data.videos.forEach((video) => {
+            // Sort videos in ascending order by video_id
+            const sortedVideos = data.videos.sort((a, b) => parseInt(a.video_id) - parseInt(b.video_id));
+
+            // Loop through the sorted video list and create poster elements
+            sortedVideos.forEach((video) => {
+                const container = document.createElement("div");
+                container.style.textAlign = "center"; // Center-align the title
+                container.style.margin = "10px"; // Add some spacing
+
                 const img = document.createElement("img");
                 img.src = video.poster_url; // Pre-signed poster URL
                 img.alt = video.title;
                 img.title = video.title; // Tooltip for the poster
                 img.className = "video-poster";
+                img.style.width = "200px"; // Ensures uniform size
+                img.style.height = "300px"; // Fixed height for consistency
+                img.style.objectFit = "cover"; // Maintain aspect ratio
                 img.onclick = () => navigateToVideoPage(video.video_id, video.title, video.description);
-                videoGrid.appendChild(img);
+
+                const title = document.createElement("p");
+                title.textContent = video.title; // Add title below the poster
+                title.style.marginTop = "8px";
+                title.style.fontSize = "1em";
+                title.style.fontWeight = "bold";
+                title.style.color = "#555";
+
+                container.appendChild(img);
+                container.appendChild(title);
+                videoGrid.appendChild(container);
             });
         } else {
             console.error("Failed to fetch posters:", data.error);
@@ -64,7 +84,7 @@ async function fetchAndPlayVideo() {
     videoTitle.textContent = title || "Untitled Video";
     descriptionElement.textContent = description || "No description available.";
 
-    const API_URL = `http://52.207.108.185:8001/videos/play_video/${videoId}/`;
+    const API_URL = `http://18.232.250.31:8001/videos/play_video/${videoId}/`;
 
     try {
         const response = await fetch(API_URL, { method: "POST" });

@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost',
     '0.0.0.0',
     '127.0.0.1',
-    '44.202.238.149',
+    '18.232.250.31',
     ]
 
 
@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'myflix_db',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'webpage-database-1.c0rrobgwcln8.us-east-1.rds.amazonaws.com',
+        'HOST': 'auth-database-1.c6feexinnlh9.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -138,9 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.User'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://44.202.238.149:5000",
+    "http://18.232.250.31:5000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://localhost:5000",
-    "http://44.202.238.149:8000"
+    "http://18.232.250.31:8000"
 ]

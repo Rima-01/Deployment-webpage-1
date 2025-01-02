@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player | Educational Platform</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #004085;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            color: #cce5ff;
+        }
+
+        /* Content Section */
+        .content {
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            color: #004085;
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
+        }
+
+        /* Button Styles */
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #004085;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .button-container button:active {
+            background-color: #003768;
+        }
+
+        /* Footer Section */
+        footer {
+            margin-top: 40px;
+            background-color: #004085;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        footer a {
+            color: #cce5ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Educational Video Player</h1>
+        <p>Learn, Grow, and Succeed</p>
+    </header>
+
+    <!-- Content Section -->
+    <div class="content">
+        <h2 id="video-title">Loading...</h2>
+        <p id="description"></p>
+        <div class="video-container">
+            <video id="video" controls autoplay></video>
+        </div>
+        <div class="button-container">
+            <button onclick="goBack()">Back to Library</button>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        &copy; 2025 Educational Platform. All Rights Reserved. | <a href="contact.html">Contact Us</a>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function goBack() {
+            window.location.href = "posters.html"; // Navigate back to the posters page
+        }
+    </script>
+    <script src="scripts/app1.js"></script>
+</body>
+</html>

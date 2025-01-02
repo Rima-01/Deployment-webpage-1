@@ -1,5 +1,5 @@
 // Base URL for API Endpoints
-const API_BASE_URL = "http://44.202.238.149:8000/api"; // Replace with your backend URL
+const API_BASE_URL = "http://18.232.250.31:8000/api"; // Replace with your backend URL
 
 // Utility function to handle errors
 const handleError = (error, errorElement) => {

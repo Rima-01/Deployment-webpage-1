@@ -1,27 +1,28 @@
-# Use the official Python image as the base image
+# Step 1: Use an official Python base image
 FROM python:3.9-slim
 
-# Set the working directory in the container
+# Step 2: Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1  # Prevent Python from writing .pyc files
+ENV PYTHONUNBUFFERED 1        # Prevent Python output from being buffered
+
+# Step 3: Set the working directory inside the container
 WORKDIR /app
 
-# Copy the project files into the container
+# Step 4: Copy the backend code into the container
 COPY . /app
 
-# Install system dependencies
+# Step 5: Install system dependencies
 RUN apt-get update && apt-get install -y \
-    gcc libpq-dev \
+    gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Step 6: Install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose the port the app runs on
-EXPOSE 8000
+# Step 7: Expose the port Django will run on
+EXPOSE 8001
 
-# Set the environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Step 8: Define the command to run the backend server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
