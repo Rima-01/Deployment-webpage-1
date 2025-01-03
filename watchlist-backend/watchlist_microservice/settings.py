@@ -10,26 +10,18 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Security
+SECRET_KEY = 'your-secret-key-here'
+DEBUG = True  # Set to False in production
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '54.211.211.195']  # Adjust this for your deployment (e.g., ['your-domain.com'])
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z)srcp-@$(fy^tl7uh%y3*#p9wzpcdx=gwns*+z^=e%9g&3x!)'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
-
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,9 +29,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',  # Django REST Framework
+    'watchlist',  # Watchlist app
+    'corsheaders',  # Enable CORS handling
 ]
 
+# Middleware
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # CORS Middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,11 +46,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'watchlist_microservice.urls'
+# Root URL Configuration
+ROOT_URLCONF = 'watchlist_service.urls'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#        'DIRS': [BASE_DIR / 'frontend/templates'],
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -67,23 +67,22 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'watchlist_microservice.wsgi.application'
+# WSGI Application
+WSGI_APPLICATION = 'watchlist_service.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# Database Configuration (PostgreSQL)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'watchlist_db',  # Replace with your database name
+        'USER': 'postgres',  # Replace with your database username
+        'PASSWORD': 'postgres',  # Replace with your database password
+        'HOST': 'your_rds_host',  # Replace with your RDS host
+        'PORT': '5432',  # Default PostgreSQL port
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
+# Password Validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -99,25 +98,93 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
+# Localization
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
+# Static Files
+STATIC_URL = '/static/'
+#STATICFILES_DIRS = [BASE_DIR / 'frontend']
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
-STATIC_URL = 'static/'
+# Authentication Microservice URL
+AUTHENTICATION_SERVICE_URL = os.getenv('AUTH_SERVICE_URL', 'http://authentication_service')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+# Video Streaming Microservice URL
+VIDEO_STREAMING_SERVICE_URL = os.getenv('VIDEO_SERVICE_URL', 'http://video_streaming_service')
 
+# AWS S3 Configuration (for pre-signed URLs)
+AWS_STORAGE_BUCKET_NAME = 'webpage-uploads-2'
+AWS_REGION_NAME = 'us-east-1'
+
+# Default Auto Field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://54.211.211.195:5000",
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "http://localhost:5000",
+    "http://54.211.211.195:8001"
+]
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/watchlist.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'watchlist': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
