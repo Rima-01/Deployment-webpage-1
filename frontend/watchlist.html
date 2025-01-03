@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watchlist</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        #watchlist-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+        .video-card {
+            width: 200px;
+            text-align: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .video-card img {
+            width: 100%;
+            height: auto;
+        }
+        .video-card h4 {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .video-card button {
+            background-color: #ff5252;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 10px 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .video-card button:hover {
+            background-color: #e84141;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">My Watchlist</h1>
+    <div id="watchlist-container"></div>
+    <script src="scripts/watchlist.js"></script>
+</body>
+</html>
