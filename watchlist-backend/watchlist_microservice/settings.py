@@ -18,8 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
 SECRET_KEY = 'your-secret-key-here'
-DEBUG = True  # Set to False in production
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '54.211.211.195']  # Adjust this for your deployment (e.g., ['your-domain.com'])
+DEBUG = False  # Set to False in production
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '54.84.0.56']  # Adjust this for your deployment (e.g., ['your-domain.com'])
 
 # Installed Apps
 INSTALLED_APPS = [
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST Framework
     'watchlist',  # Watchlist app
     'corsheaders',  # Enable CORS handling
+    'django_extensions',
 ]
 
 # Middleware
@@ -47,7 +48,7 @@ MIDDLEWARE = [
 ]
 
 # Root URL Configuration
-ROOT_URLCONF = 'watchlist_service.urls'
+ROOT_URLCONF = 'watchlist_microservice.urls'
 
 # Templates
 TEMPLATES = [
@@ -68,20 +69,19 @@ TEMPLATES = [
 ]
 
 # WSGI Application
-WSGI_APPLICATION = 'watchlist_service.wsgi.application'
+WSGI_APPLICATION = 'watchlist_microservice.wsgi.application'
 
 # Database Configuration (PostgreSQL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'watchlist_db',  # Replace with your database name
+        'NAME': 'myflix_db',  # Replace with your database name
         'USER': 'postgres',  # Replace with your database username
         'PASSWORD': 'postgres',  # Replace with your database password
-        'HOST': 'your_rds_host',  # Replace with your RDS host
+        'HOST': 'webpage-database-1.c6feexinnlh9.us-east-1.rds.amazonaws.com',  # Replace with your RDS host
         'PORT': '5432',  # Default PostgreSQL port
     }
 }
-
 # Password Validators
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -107,19 +107,18 @@ USE_TZ = True
 
 # Static Files
 STATIC_URL = '/static/'
-#STATICFILES_DIRS = [BASE_DIR / 'frontend']
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-    ],
+#    'DEFAULT_RENDERER_CLASSES': [
+#        'rest_framework.renderers.JSONRenderer',
+#        'rest_framework.renderers.BrowsableAPIRenderer',
+#    ],
+#    'DEFAULT_PARSER_CLASSES': [
+#        'rest_framework.parsers.JSONParser',
+#    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+#        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -127,64 +126,33 @@ REST_FRAMEWORK = {
     ],
 }
 
-# Authentication Microservice URL
-AUTHENTICATION_SERVICE_URL = os.getenv('AUTH_SERVICE_URL', 'http://authentication_service')
-
-# Video Streaming Microservice URL
-VIDEO_STREAMING_SERVICE_URL = os.getenv('VIDEO_SERVICE_URL', 'http://video_streaming_service')
-
-# AWS S3 Configuration (for pre-signed URLs)
-AWS_STORAGE_BUCKET_NAME = 'webpage-uploads-2'
-AWS_REGION_NAME = 'us-east-1'
+AWS_REGION = os.getenv('AWS_REGION', 'us-east-1')
+AWS_S3_BUCKET_NAME = os.getenv('AWS_S3_BUCKET_NAME', 'webpage-uploads-2')
 
 # Default Auto Field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://54.211.211.195:5000",
-    "http://localhost:8001",
-    "http://127.0.0.1:8001",
+    "http://54.84.0.56:5000",
+    "http://localhost:8002",
+    "http://127.0.0.1:8002",
     "http://localhost:5000",
-    "http://54.211.211.195:8001"
+    "http://54.84.0.56:8002"
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 # Logging Configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/watchlist.log',
-            'formatter': 'verbose',
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'watchlist': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
     },
 }

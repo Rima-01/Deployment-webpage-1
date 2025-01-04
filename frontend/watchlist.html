@@ -3,57 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watchlist</title>
+    <title>My Watchlist</title>
+    <!-- Link to your external JavaScript file -->
+    <script src="scripts/watchlist.js" defer></script>
     <style>
-        /* CSS Styles */
+        /* General body styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
         }
+
+        /* Header styling */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header button {
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        header button:hover {
+            background-color: #ff0000;
+        }
+
+        /* Main content styling */
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Watchlist container styling */
         #watchlist-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            padding: 20px;
             justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
         }
+
+        /* Individual video card styling */
         .video-card {
-            width: 200px;
-            text-align: center;
             background-color: #fff;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
             overflow: hidden;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .video-card img {
-            width: 100%;
+            max-width: 100%;
             height: auto;
         }
+
         .video-card h4 {
             margin: 10px 0;
-            font-size: 1.1em;
+            font-size: 1rem;
         }
+
         .video-card button {
-            background-color: #ff5252;
-            color: #fff;
+            background-color: #007bff;
             border: none;
-            border-radius: 3px;
-            padding: 10px 15px;
-            font-size: 0.9em;
+            color: white;
+            padding: 5px 10px;
             cursor: pointer;
+            border-radius: 5px;
             margin-bottom: 10px;
         }
+
         .video-card button:hover {
-            background-color: #e84141;
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1 style="text-align:center;">My Watchlist</h1>
-    <div id="watchlist-container"></div>
-    <script src="scripts/watchlist.js"></script>
+    <!-- Header Section -->
+    <header>
+        <h1>My Watchlist</h1>
+        <button id="logout-button">Logout</button>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <div id="watchlist-container">
+            <p>Loading your watchlist...</p>
+        </div>
+    </main>
 </body>
 </html>

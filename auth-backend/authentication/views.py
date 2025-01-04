@@ -90,7 +90,7 @@ class LoginView(APIView):
 
         if user is not None:
             login(request, user)
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Login successful','user_id': user.email}, status=status.HTTP_200_OK)
         else:
             return Response(
                 {'error': 'Invalid credentials. Please check your email and password.'},

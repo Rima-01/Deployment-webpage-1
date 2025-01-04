@@ -13,14 +13,37 @@
             color: #333;
         }
 
-        h1 {
-            text-align: center;
-            padding: 20px 0;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background-color: #007bff;
             color: #fff;
+            padding: 10px 20px;
+        }
+
+        h1 {
             margin: 0;
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
+        }
+
+        .watchlist-button {
+            background-color: #fff;
+            color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .watchlist-button:hover {
+            background-color: #007bff;
+            color: #fff;
         }
 
         p {
@@ -78,7 +101,11 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to the Educational Video Library</h1>
+    <header>
+        <h1>Educational Video Library</h1>
+        <!-- Watchlist Button -->
+        <button class="watchlist-button" onclick="navigateToWatchlist()">My Watchlist</button>
+    </header>
     <p>Click on a poster to start learning.</p>
     <div id="video-grid" class="video-grid">
         <!-- Posters will be dynamically injected here -->
@@ -86,6 +113,16 @@
     <footer>
         &copy; 2025 Educational Video Library. All Rights Reserved.
     </footer>
+
+    <!-- Inline JavaScript to Handle Navigation -->
+    <script>
+        function navigateToWatchlist() {
+            // Redirect to the watchlist page
+            window.location.href = "/watchlist.html"; // Adjust the path if necessary
+        }
+    </script>
+
+    <!-- External Script -->
     <script src="scripts/app1.js"></script>
 </body>
 </html>

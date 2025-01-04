@@ -1,5 +1,5 @@
 // Base URL for API Endpoints
-const API_BASE_URL = "http://54.211.211.195:8000/api"; // Replace with your backend URL
+const API_BASE_URL = "http://54.84.0.56:8000/api"; // Replace with your backend URL
 
 // Utility function to handle errors
 const handleError = (error, errorElement) => {
@@ -71,6 +71,8 @@ const initializeLogin = () => {
 
                 if (response.ok) {
                     loginSuccess.innerText = data.message || 'Login successful.';
+                    // Store the user_id (email) in localStorage
+                    localStorage.setItem('user_id', data.user_id);
                     setTimeout(() => {
                         // Redirect to posters.html on successful login
                         window.location.href = "posters.html";
