@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost',
     '0.0.0.0',
     '127.0.0.1',
-    '54.84.0.56',
+    '54.166.52.75',
     ]
 
 
@@ -138,9 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.User'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://54.84.0.56:5000",
+    "http://54.166.52.75:5000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://localhost:5000",
-    "http://54.84.0.56:8000"
+    "http://54.166.52.75:8000"
 ]

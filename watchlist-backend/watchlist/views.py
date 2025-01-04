@@ -4,8 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Watchlist
 from .serializers import WatchlistSerializer
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,20 +16,20 @@ videos_table = dynamodb.Table(VIDEOS_TABLE_NAME)
 s3_client = boto3.client('s3', region_name='us-east-1')  # Replace 'your-region'
 S3_BUCKET_NAME = 'webpage-uploads-2'  # Replace 'your-bucket-name'
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class WatchlistView(APIView):
     def get(self, request):
         """
         Fetch the user's watchlist and enrich it with video metadata from DynamoDB.
         """
-        user_id = request.GET.get('user_id')
+        user_id = request.session.get('user_id')  # Retrieve user_id from session
 
         if not user_id:
-            logger.warning("GET request without user_id.")
-            return Response({"error": "User ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
+            logger.warning("GET request without a logged-in user.")
+            return Response({"error": "User not logged in."}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Fetch user's watchlist from PostgreSQL
-        watchlist = Watchlist.objects.filter(user_id=user_id.lower())  # Ensure case-insensitivity
+        watchlist = Watchlist.objects.filter(user_id=user_id)  # Ensure case-insensitivity if needed at DB level
 
         if not watchlist.exists():
             logger.info(f"Watchlist is empty for user_id: {user_id}")
@@ -68,11 +66,11 @@ class WatchlistView(APIView):
         """
         Add a video to the user's watchlist after checking for duplicates.
         """
-        user_id = request.data.get('user_id')
+        user_id = request.session.get('user_id')  # Retrieve user_id from session
 
         if not user_id:
-            logger.warning("POST request without user_id.")
-            return Response({"error": "User ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
+            logger.warning("POST request without a logged-in user.")
+            return Response({"error": "User not logged in."}, status=status.HTTP_401_UNAUTHORIZED)
 
         video_id = request.data.get('video_id')
         if not video_id:
@@ -80,12 +78,12 @@ class WatchlistView(APIView):
             return Response({"error": "Video ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if video is already in the watchlist
-        if Watchlist.objects.filter(user_id=user_id.lower(), video_id=video_id).exists():
+        if Watchlist.objects.filter(user_id=user_id, video_id=video_id).exists():
             logger.info(f"Duplicate video_id {video_id} for user_id {user_id}.")
             return Response({"message": "Video already exists in your watchlist."}, status=status.HTTP_409_CONFLICT)
 
         # Serialize and save the new entry
-        data = {'user_id': user_id.lower(), 'video_id': video_id}
+        data = {'user_id': user_id, 'video_id': video_id}
         serializer = WatchlistSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -97,18 +95,18 @@ class WatchlistView(APIView):
         """
         Remove a video from the user's watchlist.
         """
-        user_id = request.GET.get('user_id')
+        user_id = request.session.get('user_id')  # Retrieve user_id from session
 
         if not user_id:
-            logger.warning("DELETE request without user_id.")
-            return Response({"error": "User ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
+            logger.warning("DELETE request without a logged-in user.")
+            return Response({"error": "User not logged in."}, status=status.HTTP_401_UNAUTHORIZED)
 
         if not video_id:
             logger.warning("DELETE request without video_id.")
             return Response({"error": "Video ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Delete the entry from the database
-        deleted_count, _ = Watchlist.objects.filter(user_id=user_id.lower(), video_id=video_id).delete()
+        deleted_count, _ = Watchlist.objects.filter(user_id=user_id, video_id=video_id).delete()
 
         if deleted_count == 0:
             logger.warning(f"Video {video_id} not found in watchlist for user_id {user_id}.")
