@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 SECRET_KEY = 'django-insecure-6q_2a=en*6xk7)a@k&ujc2t42@-wqa#(yck$rqj-*lqcc^f-)b'
 DEBUG = False  # Set to False in production
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '54.84.0.56']  # Adjust this for your deployment (e.g., ['your-domain.com'])
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '3.89.75.11']  # Adjust this for your deployment (e.g., ['your-domain.com'])
 
 # Installed Apps
 INSTALLED_APPS = [
@@ -78,7 +78,7 @@ DATABASES = {
         'NAME': 'myflix_db',  # Replace with your database name
         'USER': 'postgres',  # Replace with your database username
         'PASSWORD': 'postgres',  # Replace with your database password
-        'HOST': 'webpage-database-1.c6feexinnlh9.us-east-1.rds.amazonaws.com',  # Replace with your RDS host
+        'HOST': 'wb-database-1.c6feexinnlh9.us-east-1.rds.amazonaws.com',  # Replace with your RDS host
         'PORT': '5432',  # Default PostgreSQL port
     }
 }
@@ -136,11 +136,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://54.84.0.56:5000",
+    "http://3.89.75.11:5000",
     "http://localhost:8002",
     "http://127.0.0.1:8002",
     "http://localhost:5000",
-    "http://54.84.0.56:8002"
+    "http://3.89.75.11:8002"
 ]
 CORS_ALLOW_CREDENTIALS = True
 

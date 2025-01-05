@@ -14,11 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.http import HttpResponse  # Import this at the top
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.contrib import admin  # Import the admin module
+def root_view(request):
+    return HttpResponse("Welcome to the Watchlist API!", status=200)
 
 urlpatterns = [
+    path('', root_view, name='root'),  # Handle the root URL
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(), name='login'),  # Default login view
 #    path('logout/watchlist/', auth_views.LogoutView.as_view(), name='logout'),  # Default logout view

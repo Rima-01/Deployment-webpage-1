@@ -91,8 +91,8 @@ class LoginView(APIView):
         if user is not None:
             login(request, user)
             # Store user_id in session
-            request.session['user_id'] = user.id
-            return Response({'message': 'Login successful','user_id': user.email}, status=status.HTTP_200_OK)
+            #request.session['user_id'] = user.id
+            return Response({'message': 'Login successful','user_id': user.user_id}, status=status.HTTP_200_OK)
         else:
             return Response(
                 {'error': 'Invalid credentials. Please check your email and password.'},

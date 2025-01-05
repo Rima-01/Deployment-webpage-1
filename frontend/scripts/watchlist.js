@@ -1,4 +1,4 @@
-const apiUrl = "http://54.84.0.56:8002/api/watchlist/";
+const apiUrl = "http://3.89.75.11:8002/api/watchlist/";
 
 // Get user_id from localStorage
 const userId = localStorage.getItem('user_id');
