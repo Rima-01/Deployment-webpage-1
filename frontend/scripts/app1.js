@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fetch and display posters
 async function fetchPosters() {
-    const API_URL = "http://3.89.75.11:8001/videos/get_videos/"; // Replace with your backend API URL
+    const API_URL = "http://54.152.167.28:8001/videos/get_videos/"; // Replace with your backend API URL
     const videoGrid = document.getElementById("video-grid");
 
     try {
@@ -84,7 +84,7 @@ async function fetchAndPlayVideo() {
     videoTitle.textContent = title || "Untitled Video";
     descriptionElement.textContent = description || "No description available.";
 
-    const API_URL = `http://3.89.75.11:8001/videos/play_video/${videoId}/`;
+    const API_URL = `http://54.152.167.28:8001/videos/play_video/${videoId}/`;
 
     try {
         const response = await fetch(API_URL, { method: "POST" });
@@ -112,3 +112,17 @@ function displayError(container, message) {
     errorElement.style.textAlign = "center";
     container.appendChild(errorElement);
 }
+
+// Logout function
+function logout() {
+    // Redirect to the login page
+    window.location.href = "/login.html"; // Adjust the path if necessary
+}
+
+// Attach logout functionality to the button dynamically
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutButton = document.getElementById("logout-btn");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", logout);
+    }
+});

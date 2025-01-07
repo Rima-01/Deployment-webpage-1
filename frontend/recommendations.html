@@ -1,0 +1,105 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures the body takes up the full viewport height */
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        .recommendation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 0 auto;
+            padding: 0 10px;
+            max-width: 1000px;
+            flex-grow: 1; /* Ensures this section grows to fill available space */
+        }
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 90%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .recommendation-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .recommendation-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .recommendation-item img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .description {
+            flex: 1;
+        }
+        .description h3 {
+            margin: 0 0 5px;
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+        .description p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #007bff;
+            color: white;
+            font-size: 0.8rem;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Recommended Videos</h1>
+    </div>
+    <div id="recommendation-container" class="recommendation-container">
+        <!-- Recommendations will be dynamically loaded here -->
+    </div>
+    <footer>
+        <p>&copy; 2025 Educational Platform. All Rights Reserved.</p>
+    </footer>
+    <script src="scripts/recommendations.js?_v=${new Date().getTime()}"></script>
+</body>
+</html>

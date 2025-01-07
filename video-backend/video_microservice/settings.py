@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 #DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '3.89.75.11']
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '54.152.167.28']
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_extensions',
     'videos',
+    
 ]
 
 MIDDLEWARE = [
@@ -115,11 +116,11 @@ dynamodb = boto3.resource(
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://3.89.75.11:5000",
+    "http://54.152.167.28:5000",
     "http://localhost:8001",
     "http://127.0.0.1:8001",
     "http://localhost:5000",
-    "http://3.89.75.11:8001"
+    "http://54.152.167.28:8001"
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 

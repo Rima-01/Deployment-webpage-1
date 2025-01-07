@@ -1,116 +1,47 @@
-import boto3
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import Watchlist
 from .serializers import WatchlistSerializer
-import logging
-
-logger = logging.getLogger(__name__)
-
-# AWS DynamoDB and S3 setup
-dynamodb = boto3.resource('dynamodb', region_name='us-east-1')  # Replace 'your-region'
-VIDEOS_TABLE_NAME = 'VideosTable'
-videos_table = dynamodb.Table(VIDEOS_TABLE_NAME)
-
-s3_client = boto3.client('s3', region_name='us-east-1')  # Replace 'your-region'
-S3_BUCKET_NAME = 'webpage-uploads-2'  # Replace 'your-bucket-name'
-
+import boto3
+from botocore.exceptions import ClientError
 
 class WatchlistView(APIView):
+#    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+
     def get(self, request):
-        """
-        Fetch the user's watchlist and enrich it with video metadata from DynamoDB.
-        """
-        user_id = request.session.get('user_id')  # Retrieve user_id from session
+        user_id = request.user.id
+        watchlist = Watchlist.objects.filter(user_id=user_id)
 
-        if not user_id:
-            logger.warning("GET request without a logged-in user.")
-            return Response({"error": "User not logged in."}, status=status.HTTP_401_UNAUTHORIZED)
-
-        # Fetch user's watchlist from PostgreSQL
-        watchlist = Watchlist.objects.filter(user_id=user_id)  # Ensure case-insensitivity if needed at DB level
-
-        if not watchlist.exists():
-            logger.info(f"Watchlist is empty for user_id: {user_id}")
-            return Response({"message": "Your watchlist is empty."}, status=status.HTTP_200_OK)
-
-        enriched_videos = []
+        # Fetch video metadata from DynamoDB (using boto3)
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table('VideosTable')
+        enriched_watchlist = []
         for item in watchlist:
-            video_id = item.video_id
             try:
-                # Fetch video metadata from DynamoDB
-                response = videos_table.get_item(Key={'video_id': video_id})
-                video_metadata = response.get('Item', {})
-                if video_metadata:
-                    # Generate a pre-signed URL for the poster
-                    poster_key = video_metadata.get('poster_url')
-                    presigned_url = s3_client.generate_presigned_url(
-                        'get_object',
-                        Params={'Bucket': S3_BUCKET_NAME, 'Key': poster_key},
-                        ExpiresIn=3600  # URL expires in 1 hour
-                    )
-                    enriched_videos.append({
-                        'video_id': video_id,
-                        'title': video_metadata.get('title'),
-                        'poster_url': presigned_url,
-                    })
-            except Exception as e:
-                logger.error(f"Error fetching metadata for video_id {video_id}: {e}")
+                response = table.get_item(Key={'video_id': item.video_id})
+                if 'Item' in response:
+                    video_data = response['Item']
+                    video_data['timestamp'] = item.timestamp  # Add timestamp to metadata
+                    enriched_watchlist.append(video_data)
+            except ClientError as e:
+                # Log the error and skip this video
+                print(f"Error fetching video metadata: {e}")
                 continue
 
-        logger.info(f"Retrieved watchlist for user_id: {user_id}")
-        return Response(enriched_videos, status=status.HTTP_200_OK)
+        return Response({"watchlist": enriched_watchlist}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        """
-        Add a video to the user's watchlist after checking for duplicates.
-        """
-        user_id = request.session.get('user_id')  # Retrieve user_id from session
-
-        if not user_id:
-            logger.warning("POST request without a logged-in user.")
-            return Response({"error": "User not logged in."}, status=status.HTTP_401_UNAUTHORIZED)
-
-        video_id = request.data.get('video_id')
-        if not video_id:
-            logger.warning("POST request without video_id.")
-            return Response({"error": "Video ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Check if video is already in the watchlist
-        if Watchlist.objects.filter(user_id=user_id, video_id=video_id).exists():
-            logger.info(f"Duplicate video_id {video_id} for user_id {user_id}.")
-            return Response({"message": "Video already exists in your watchlist."}, status=status.HTTP_409_CONFLICT)
-
-        # Serialize and save the new entry
-        data = {'user_id': user_id, 'video_id': video_id}
-        serializer = WatchlistSerializer(data=data)
+        serializer = WatchlistSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            logger.info(f"Video {video_id} added to watchlist for user_id {user_id}.")
+            serializer.save(user_id=request.user.id)  # Attach the current user ID
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, video_id):
-        """
-        Remove a video from the user's watchlist.
-        """
-        user_id = request.session.get('user_id')  # Retrieve user_id from session
-
-        if not user_id:
-            logger.warning("DELETE request without a logged-in user.")
-            return Response({"error": "User not logged in."}, status=status.HTTP_401_UNAUTHORIZED)
-
-        if not video_id:
-            logger.warning("DELETE request without video_id.")
-            return Response({"error": "Video ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Delete the entry from the database
-        deleted_count, _ = Watchlist.objects.filter(user_id=user_id, video_id=video_id).delete()
-
-        if deleted_count == 0:
-            logger.warning(f"Video {video_id} not found in watchlist for user_id {user_id}.")
-            return Response({"error": "Video not found in watchlist."}, status=status.HTTP_404_NOT_FOUND)
-
-        logger.info(f"Video {video_id} removed from watchlist for user_id {user_id}.")
-        return Response({"message": "Video removed from watchlist."}, status=status.HTTP_204_NO_CONTENT)
+        user_id = request.user.id
+        deleted, _ = Watchlist.objects.filter(user_id=user_id, video_id=video_id).delete()
+        if deleted:
+            return Response({"message": "Video removed from watchlist."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"error": "Video not found in watchlist."}, status=status.HTTP_404_NOT_FOUND)
