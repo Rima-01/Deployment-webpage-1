@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 //    const API_URL = "http://54.152.167.28:8003/get_recommendations/"; // Backend URL
 //    const API_URL = 'http:/3.88.57.158:8003/get_recommendations/?_=${new Date().getTime()}';
-    const API_URL = `http://3.88.57.158:8003/get_recommendations/?_=${new Date().getTime()}`;
+    const API_URL = `http://3.94.203.71:8003/get_recommendations/?_=${new Date().getTime()}`;
 
     const recommendationContainer = document.getElementById("recommendation-container");
 

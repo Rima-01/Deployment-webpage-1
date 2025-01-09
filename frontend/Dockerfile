@@ -3,10 +3,10 @@ FROM nginx:alpine
 
 # Set the working directory inside the container
 WORKDIR /usr/share/nginx/html
-Webpage-html-1/
 
-# Copy your frontend files into the container
-COPY frontends/ .
+# Copy the frontend files into the container
+#COPY Webpage-html-3/frontend/ .
+COPY . .
 
 # Expose the port on which the web server runs
 EXPOSE 5000

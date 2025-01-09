@@ -25,4 +25,4 @@ RUN pip install -r requirements.txt
 EXPOSE 8001
 
 # Step 8: Define the command to run the backend server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8001"]

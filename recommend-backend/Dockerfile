@@ -1,28 +1,28 @@
-# Use Python base image
+# Step 1: Use an official Python base image
 FROM python:3.9-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Step 2: Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1  # Prevent Python from writing .pyc files
+ENV PYTHONUNBUFFERED 1        # Prevent Python output from being buffered
 
-# Create and set the working directory inside the container
+# Step 3: Set the working directory inside the container
 WORKDIR /app
 
-# Copy only requirements to leverage Docker cache
-COPY requirements.txt /app/
+# Step 4: Copy the backend code into the container
+COPY . /app
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Step 5: Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the rest of the project files
-COPY . /app/
+# Step 6: Install Python dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Expose the port the app runs on
+# Step 7: Expose the port Django will run on
 EXPOSE 8003
 
-# Define environment variables for Django settings
-ENV DJANGO_SETTINGS_MODULE=recommend_backend.settings
-ENV ENV_FILE_LOCATION=/app/.env
-
-# Run the application
+# Step 8: Define the command to run the backend server
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8003"]
