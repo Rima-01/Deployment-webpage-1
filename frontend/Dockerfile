@@ -9,7 +9,7 @@ WORKDIR /usr/share/nginx/html
 COPY . .
 
 # Expose the port on which the web server runs
-EXPOSE 5000
+EXPOSE 80
 
 # Default command to start Nginx
 CMD ["nginx", "-g", "daemon off;"]

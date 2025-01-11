@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  auth-backend:
+    image: 597947151223.dkr.ecr.us-east-1.amazonaws.com/auth-backend:latest
+    ports:
+      - "8000:8000"
+
+  video-backend:
+    image: 597947151223.dkr.ecr.us-east-1.amazonaws.com/video-backend:latest
+    ports:
+      - "8001:8001"
+
+  recommend-backend:
+    image: 597947151223.dkr.ecr.us-east-1.amazonaws.com/recommend-backend:latest
+    ports:
+      - "8003:8003"
+
+  frontend:
+    image: 597947151223.dkr.ecr.us-east-1.amazonaws.com/frontend-app:latest
+    build: ./frontend  # Path to the Dockerfile directory
+    ports:
+      - "5000:80"  # Host port 5000 maps to container port 80

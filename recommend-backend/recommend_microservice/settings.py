@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-6q_2a=en*6xk7)a@k&ujc2t42@-wqa#(yck$rqj-*lqcc^f-)b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '3.94.203.71']
+ALLOWED_HOSTS = ['localhost', '0.0.0.0', '127.0.0.1', '34.239.234.119']
 
 
 # Application definition
@@ -145,11 +145,11 @@ dynamodb = boto3.resource(
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
-    "http://3.94.203.71:5000",
+    "http://34.239.234.119:5000",
     "http://localhost:8003",
     "http://127.0.0.1:8003",
     "http://localhost:5000",
-    "http://3.94.203.71:8003"
+    "http://34.239.234.119:8003"
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
