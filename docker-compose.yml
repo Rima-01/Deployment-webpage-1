@@ -18,6 +18,5 @@ services:
 
   frontend:
     image: 597947151223.dkr.ecr.us-east-1.amazonaws.com/frontend-app:latest
-    build: ./frontend  # Path to the Dockerfile directory
     ports:
       - "5000:80"  # Host port 5000 maps to container port 80
