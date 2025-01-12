@@ -3,67 +3,80 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Triggers the workflow on a push to the 'main' branch
+      - main
 
 jobs:
   build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
+    env:
+      AWS_REGION: us-east-1
+      ECR_REGISTRY: 597947151223.dkr.ecr.us-east-1.amazonaws.com
+
     steps:
-      # Checkout the code
-      - name: Checkout code
+      # Step 1: Checkout the code
+      - name: Checkout Code
         uses: actions/checkout@v3
-        
-     # Configure AWS Credentials
+
+      # Step 2: Configure AWS Credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: ${{ secrets.AWS_REGION }} 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      # Log in to Amazon ECR
+      # Step 3: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         id: login-ecr
-        run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          
-      # Build and Push Docker Images to ECR
-      - name: Build and push Docker images
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry: ${{ env.ECR_REGISTRY }}
+
+      # Step 4: Build and Push Docker Images
+      - name: Build and Push Docker Images
         run: |
           # Build Docker images
-          docker build -t auth-backend .
-          docker build -t video-backend .
-          docker build -t recommend-backend .
-          docker build -t frontend-app .
+          docker build -t auth-backend ./auth-backend
+          docker build -t video-backend ./video-backend
+          docker build -t recommend-backend ./recommend-backend
+          docker build -t frontend-app ./frontend
 
           # Tag Docker images
-          docker tag auth-backend:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
-          docker tag video-backend:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
-          docker tag recommend-backend:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
-          docker tag frontend-app:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+          docker tag auth-backend:latest ${{ env.ECR_REGISTRY }}/auth-backend:latest
+          docker tag video-backend:latest ${{ env.ECR_REGISTRY }}/video-backend:latest
+          docker tag recommend-backend:latest ${{ env.ECR_REGISTRY }}/recommend-backend:latest
+          docker tag frontend-app:latest ${{ env.ECR_REGISTRY }}/frontend-app:latest
 
           # Push Docker images to ECR
-          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
-          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
-          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
-          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+          docker push ${{ env.ECR_REGISTRY }}/auth-backend:latest
+          docker push ${{ env.ECR_REGISTRY }}/video-backend:latest
+          docker push ${{ env.ECR_REGISTRY }}/recommend-backend:latest
+          docker push ${{ env.ECR_REGISTRY }}/frontend-app:latest
 
-      # Deploy to EC2
+      # Step 5: Add EC2 Key
+      - name: Add EC2 Key
+        run: |
+          echo "${{ secrets.DEVOPS_KEY_2 }}" > devops-key-2.pem
+          chmod 600 devops-key-2.pem
+
+      # Step 6: Deploy to EC2
       - name: Deploy to EC2
         run: |
-          ssh -o "StrictHostKeyChecking no" ec2-user@34.239.234.119 << 'EOF'
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          ssh -i ec2_key.pem -o "StrictHostKeyChecking no" ec2-user@34.239.234.119 << 'EOF'
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
 
-          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
-          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
-          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
-          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
-          
+          docker pull ${{ env.ECR_REGISTRY }}/auth-backend:latest
+          docker pull ${{ env.ECR_REGISTRY }}/video-backend:latest
+          docker pull ${{ env.ECR_REGISTRY }}/recommend-backend:latest
+          docker pull ${{ env.ECR_REGISTRY }}/frontend-app:latest
 
           docker stop auth-backend video-backend recommend-backend frontend-app || true
           docker rm auth-backend video-backend recommend-backend frontend-app || true
 
-          docker run -d -p 8000:8000 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
-          docker run -d -p 8001:8001 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
-          docker run -d -p 8003:8003 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
-          docker run -d -p 5000:80 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+          docker run -d -p 8000:8000 ${{ env.ECR_REGISTRY }}/auth-backend:latest
+          docker run -d -p 8001:8001 ${{ env.ECR_REGISTRY }}/video-backend:latest
+          docker run -d -p 8003:8003 ${{ env.ECR_REGISTRY }}/recommend-backend:latest
+          docker run -d -p 5000:80 ${{ env.ECR_REGISTRY }}/frontend-app:latest
           EOF
