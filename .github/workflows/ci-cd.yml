@@ -1,0 +1,63 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Triggers the workflow on a push to the 'main' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          
+      # Build and Push Docker Images to ECR
+      - name: Build and push Docker images
+        run: |
+          # Build Docker images
+          docker build -t auth-backend .
+          docker build -t video-backend .
+          docker build -t recommend-backend .
+          docker build -t frontend-app .
+
+          # Tag Docker images
+          docker tag auth-backend:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
+          docker tag video-backend:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
+          docker tag recommend-backend:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
+          docker tag frontend-app:latest 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+
+          # Push Docker images to ECR
+          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
+          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
+          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
+          docker push 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+
+      # Deploy to EC2
+      - name: Deploy to EC2
+        run: |
+          ssh -o "StrictHostKeyChecking no" ec2-user@34.239.234.119 << 'EOF'
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
+          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
+          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
+          docker pull 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+          
+
+          docker stop auth-backend video-backend recommend-backend frontend-app || true
+          docker rm auth-backend video-backend recommend-backend frontend-app || true
+
+          docker run -d -p 8000:8000 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/auth-backend:latest
+          docker run -d -p 8001:8001 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/video-backend:latest
+          docker run -d -p 8003:8003 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/recommend-backend:latest
+          docker run -d -p 5000:80 597947151223.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-app:latest
+          EOF
